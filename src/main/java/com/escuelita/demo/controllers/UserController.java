@@ -24,4 +24,9 @@ public class UserController {
                       @RequestBody PatchUserRequest request) {
         service.patch(id, request);
     }
+
+    @PostMapping("mayor-de-edad/{edad}")
+    public String mayorDeEdad(@PathVariable Integer edad) {
+        return service.checarMayoriaEdad(edad);
+    }
 }

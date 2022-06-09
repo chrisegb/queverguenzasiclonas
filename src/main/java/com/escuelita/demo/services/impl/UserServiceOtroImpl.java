@@ -17,4 +17,9 @@ public class UserServiceOtroImpl implements IUserService {
     public void patch(Long id, PatchUserRequest request) {
 
     }
+
+    @Override
+    public String checarMayoriaEdad(Integer edad) {
+        return "";
+    }
 }

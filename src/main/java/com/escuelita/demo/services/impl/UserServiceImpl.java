@@ -33,6 +33,19 @@ public class UserServiceImpl implements IUserService {
         }
     }
 
+    @Override
+    public String checarMayoriaEdad(Integer edad) {
+        if (edad < 0) {
+            throw new RuntimeException("Tas mal");
+        } else if (edad > 100) {
+            throw new RuntimeException("No se puede mayor a 100");
+        }
+        if (edad > 17) {
+            return "Eres mayor de edad";
+        }
+        return "Eres menor de edad";
+    }
+
     private User patchUser(User user, PatchUserRequest request) {
         user.setEmail(request.getEmail());
         user.setPhone(request.getPhone());

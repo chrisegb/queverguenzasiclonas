@@ -8,4 +8,6 @@ public interface IUserService {
     UserResponse getUserById(Long id);
 
     void patch(Long id, PatchUserRequest request);
+
+    String checarMayoriaEdad(Integer edad);
 }
