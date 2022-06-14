@@ -1,54 +1,85 @@
 package com.escuelita.demo.services.impl;
 
-import com.escuelita.demo.dto.request.PatchUserRequest;
+import com.escuelita.demo.dto.request.CreateUserRequest;
+import com.escuelita.demo.dto.request.UpdateUserRequest;
 import com.escuelita.demo.dto.response.UserResponse;
 import com.escuelita.demo.entities.User;
-import com.escuelita.demo.repositories.UserRepository;
+import com.escuelita.demo.repositories.IUserRepository;
 import com.escuelita.demo.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
-@Service("original")
+@Service
 public class UserServiceImpl implements IUserService {
 
     @Autowired
-    private UserRepository repository;
+    private IUserRepository repository;
 
     @Override
-    public UserResponse getUserById(Long id) {
-        return from(repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No esta migue")));
+    public UserResponse getUser(Long id) {
+        Optional<User> userOptional = repository.findById(id);
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            UserResponse from = this.from(user);
+            return from;
+        }
+        throw new RuntimeException("No esta carnalito");
     }
 
     @Override
-    public void patch(Long id, PatchUserRequest request) {
+    public void create(CreateUserRequest request) {
+        User user = from(request);
+        repository.save(user);
+    }
+
+    @Override
+    public List<UserResponse> list() {
+        List<User> users = repository.findAll();
+        List<UserResponse> userResponses = from(users);
+        return userResponses;
+    }
+
+    @Override
+    public void delete(Long id) {
+        repository.deleteById(id);
+    }
+
+    @Override
+    public UserResponse update(UpdateUserRequest request, Long id) {
         Optional<User> optionalUser = repository.findById(id);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            patchUser(user, request);
-            repository.save(user);
+            User updated = from(request, user);
+            User saved = repository.save(updated);
+            UserResponse response = from(saved);
+            return response;
         }
+        throw new RuntimeException("No esta carnal no se actualizó");
     }
 
-    @Override
-    public String checarMayoriaEdad(Integer edad) {
-        if (edad < 0) {
-            throw new RuntimeException("Tas mal");
-        } else if (edad > 100) {
-            throw new RuntimeException("No se puede mayor a 100");
-        }
-        if (edad > 17) {
-            return "Eres mayor de edad";
-        }
-        return "Eres menor de edad";
-    }
-
-    private User patchUser(User user, PatchUserRequest request) {
+    private User from(UpdateUserRequest request, User user) {
         user.setEmail(request.getEmail());
-        user.setPhone(request.getPhone());
+        return user;
+    }
+
+    private List<UserResponse> from(List<User> users) {
+        List<UserResponse> userResponses = new ArrayList<>();
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+            UserResponse response = from(user);
+            userResponses.add(response);
+        }
+        return userResponses;
+    }
+
+    private User from(CreateUserRequest request) {
+        User user = new User();
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
         return user;
     }
 

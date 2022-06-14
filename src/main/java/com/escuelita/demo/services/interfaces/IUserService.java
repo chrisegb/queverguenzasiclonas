@@ -1,13 +1,20 @@
 package com.escuelita.demo.services.interfaces;
 
-import com.escuelita.demo.dto.request.PatchUserRequest;
+import com.escuelita.demo.dto.request.CreateUserRequest;
+import com.escuelita.demo.dto.request.UpdateUserRequest;
 import com.escuelita.demo.dto.response.UserResponse;
+
+import java.util.List;
 
 public interface IUserService {
 
-    UserResponse getUserById(Long id);
+    UserResponse getUser(Long id);
 
-    void patch(Long id, PatchUserRequest request);
+    void create(CreateUserRequest request);
 
-    String checarMayoriaEdad(Integer edad);
+    List<UserResponse> list();
+
+    void delete(Long id);
+
+    UserResponse update(UpdateUserRequest request, Long id);
 }
