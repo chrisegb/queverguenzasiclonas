@@ -8,6 +8,6 @@ public class HealthController {
 
     @GetMapping
     public String health() {
-        return "All OK Baby of light";
+        return "Eduardo y Edgar son feos";
     }
 }
