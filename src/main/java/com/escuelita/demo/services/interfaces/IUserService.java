@@ -1,20 +1,19 @@
 package com.escuelita.demo.services.interfaces;
 
-import com.escuelita.demo.dto.request.CreateUserRequest;
-import com.escuelita.demo.dto.request.UpdateUserRequest;
-import com.escuelita.demo.dto.response.UserResponse;
+import com.escuelita.demo.controllers.dtos.requests.CreateUserRequest;
+import com.escuelita.demo.controllers.dtos.responses.CreateUserResponse;
 
 import java.util.List;
 
 public interface IUserService {
 
-    UserResponse getUser(Long id);
+    CreateUserResponse create(CreateUserRequest request);
 
-    void create(CreateUserRequest request);
+    CreateUserResponse get(Long id);
 
-    List<UserResponse> list();
+    List<CreateUserResponse> list();
+
+    CreateUserResponse update(Long id, CreateUserRequest request);
 
     void delete(Long id);
-
-    UserResponse update(UpdateUserRequest request, Long id);
 }

@@ -1,6 +1,6 @@
-package com.escuelita.demo.dto.response;
+package com.escuelita.demo.controllers.dtos.responses;
 
-public class UserResponse {
+public class CreateUserResponse {
 
     private Long id;
     private String email;

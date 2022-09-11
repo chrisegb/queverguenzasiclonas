@@ -1,4 +1,4 @@
-package com.escuelita.demo.dto.request;
+package com.escuelita.demo.controllers.dtos.requests;
 
 public class CreateUserRequest {
 
