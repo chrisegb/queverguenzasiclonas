@@ -1,7 +1,8 @@
 package com.escuelita.demo.services;
 
 import com.escuelita.demo.controllers.dtos.requests.CreateUserRequest;
-import com.escuelita.demo.controllers.dtos.responses.CreateUserResponse;
+import com.escuelita.demo.controllers.dtos.requests.UpdateUserRequest;
+import com.escuelita.demo.controllers.dtos.responses.GetUserResponse;
 import com.escuelita.demo.entities.User;
 import com.escuelita.demo.repositories.IUserRepository;
 import com.escuelita.demo.services.interfaces.IUserService;
@@ -13,42 +14,62 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
+
+@Service("company")
 public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserRepository repository;
 
     @Override
-    public CreateUserResponse create(CreateUserRequest request) {
-        User save = repository.save(from(request));
-        return from(save);
+    public GetUserResponse get(Long id) {
+        return from(id);
     }
 
     @Override
-    public CreateUserResponse get(Long id) {
-        User user = findAndEnsureExist(id);
-        return from(user);
-    }
-
-    @Override
-    public List<CreateUserResponse> list() {
-        return repository.findAll().stream()
+    public List<GetUserResponse> list() {
+        return repository
+                .findAll()
+                .stream()
                 .map(this::from)
                 .collect(Collectors.toList());
-    }
+        /*List<GetUserResponse> responses = new ArrayList<>();
 
-    @Override
-    public CreateUserResponse update(Long id, CreateUserRequest request) {
-        User user = findAndEnsureExist(id);
-        user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword());
-        return from(repository.save(user));
+        for (int i = 0; i < users.size(); i++) {
+            User user = users.get(i);
+
+            GetUserResponse response = new GetUserResponse();
+            response.setId(user.getId());
+            response.setEmail(user.getEmail());
+
+            responses.add(response);
+        }
+
+        return responses;*/
     }
 
     @Override
     public void delete(Long id) {
-        repository.delete(findAndEnsureExist(id));
+        repository.deleteById(id);
+    }
+
+    @Override
+    public GetUserResponse create(CreateUserRequest request) {
+        User user = from(request);
+        return from(repository.save(user));
+    }
+
+    @Override
+    public GetUserResponse update(Long id, UpdateUserRequest request) {
+        User user = repository.findById(id).orElseThrow(() -> new RuntimeException("The user does not exist"));
+        user = update(user, request);
+        return from(user);
+    }
+
+    private User update(User user, UpdateUserRequest request) {
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        return repository.save(user);
     }
 
     private User from(CreateUserRequest request) {
@@ -58,14 +79,16 @@ public class UserServiceImpl implements IUserService {
         return user;
     }
 
-    private CreateUserResponse from(User user) {
-        CreateUserResponse response = new CreateUserResponse();
+    private GetUserResponse from(User user) {
+        GetUserResponse response = new GetUserResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
         return response;
     }
 
-    private User findAndEnsureExist(Long id) {
-        return repository.findById(id).orElseThrow(() -> new RuntimeException("Not found"));
+    private GetUserResponse from(Long idUser) {
+        return repository.findById(idUser)
+                .map(this::from)
+                .orElseThrow(() -> new RuntimeException("The user does not exist"));
     }
 }

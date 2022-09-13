@@ -1,9 +1,12 @@
 package com.escuelita.demo.controllers;
 
 import com.escuelita.demo.controllers.dtos.requests.CreateUserRequest;
+import com.escuelita.demo.controllers.dtos.requests.UpdateUserRequest;
 import com.escuelita.demo.controllers.dtos.responses.CreateUserResponse;
+import com.escuelita.demo.controllers.dtos.responses.GetUserResponse;
 import com.escuelita.demo.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,25 +16,26 @@ import java.util.List;
 public class UserController {
 
     @Autowired
+    @Qualifier("company")
     private IUserService service;
 
-    @GetMapping("{id}")
-    public CreateUserResponse get(@PathVariable Long id) {
-        return service.get(id);
-    }
-
     @GetMapping
-    public List<CreateUserResponse> list() {
+    public List<GetUserResponse> list() {
         return service.list();
     }
 
+    @GetMapping("{id}")
+    public GetUserResponse get(@PathVariable Long id) {
+        return service.get(id);
+    }
+
     @PostMapping
-    public CreateUserResponse create(@RequestBody CreateUserRequest request) {
+    public GetUserResponse create(@RequestBody CreateUserRequest request) {
         return service.create(request);
     }
 
     @PutMapping("{id}")
-    public CreateUserResponse update(@PathVariable Long id, @RequestBody CreateUserRequest request) {
+    public GetUserResponse update(@PathVariable Long id, @RequestBody UpdateUserRequest request) {
         return service.update(id, request);
     }
 
@@ -39,4 +43,5 @@ public class UserController {
     public void delete(@PathVariable Long id) {
         service.delete(id);
     }
+
 }
