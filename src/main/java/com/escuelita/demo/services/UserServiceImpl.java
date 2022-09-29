@@ -73,6 +73,10 @@ public class UserServiceImpl implements IUserService {
     }
 
     private User from(CreateUserRequest request) {
+        /*return User.builder()
+                .email(request.getEmail())
+                .password(request.getPassword())
+                .build();*/
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
