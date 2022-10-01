@@ -14,6 +14,7 @@ public class User {
     private Long id;
     private String email;
     private String password;
+    private String profilePicture;
 
     @OneToOne
     @JoinColumn(name = "role_id", referencedColumnName = "id")

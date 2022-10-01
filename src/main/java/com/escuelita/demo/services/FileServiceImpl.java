@@ -8,7 +8,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
+import com.escuelita.demo.entities.User;
 import com.escuelita.demo.services.interfaces.IFileService;
+import com.escuelita.demo.services.interfaces.IUserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +22,10 @@ import java.io.IOException;
 
 @Service
 public class FileServiceImpl implements IFileService {
+
+
+    @Autowired
+    private IUserService userService;
 
     private AmazonS3 s3client;
 
@@ -31,7 +38,7 @@ public class FileServiceImpl implements IFileService {
     private String SECRET_KEY = "E9OpMcRJKfo6Bqph4PSGj2G537CX9hlpNg8fz06m";
 
     @Override
-    public String upload(MultipartFile multipartFile) {
+    public String upload(MultipartFile multipartFile, Long idUser) {
         String fileUrl = "";
 
         try {
@@ -48,7 +55,14 @@ public class FileServiceImpl implements IFileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        updateUserProfile(fileUrl, idUser);
         return fileUrl;
+    }
+
+    private void updateUserProfile(String profilePictureUrl, Long idUser) {
+        User user = userService.findOneAndEnsureExist(idUser);
+        user.setProfilePicture(profilePictureUrl);
+        userService.save(user);
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {

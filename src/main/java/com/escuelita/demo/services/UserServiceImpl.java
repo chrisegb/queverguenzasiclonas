@@ -66,6 +66,17 @@ public class UserServiceImpl implements IUserService {
         return from(user);
     }
 
+    @Override
+    public User findOneAndEnsureExist(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("El usuario no se encontro"));
+    }
+
+    @Override
+    public User save(User user) {
+        return repository.save(user);
+    }
+
     private User update(User user, UpdateUserRequest request) {
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
