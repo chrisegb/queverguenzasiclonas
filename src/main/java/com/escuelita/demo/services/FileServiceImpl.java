@@ -33,9 +33,9 @@ public class FileServiceImpl implements IFileService {
 
     private String BUCKET_NAME = "upch";
 
-    private String ACCESS_KEY = "AKIA2SK2NIBF6LGMERNN";
+    private String ACCESS_KEY = "*****************";
 
-    private String SECRET_KEY = "E9OpMcRJKfo6Bqph4PSGj2G537CX9hlpNg8fz06m";
+    private String SECRET_KEY = "**********************************";
 
     @Override
     public String upload(MultipartFile multipartFile, Long idUser) {
