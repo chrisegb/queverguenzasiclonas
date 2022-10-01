@@ -23,4 +23,6 @@ public interface IUserService {
     User findOneAndEnsureExist(Long id);
 
     User save(User user);
+
+    void updateUserProfile(String profilePictureUrl, Long idUser);
 }

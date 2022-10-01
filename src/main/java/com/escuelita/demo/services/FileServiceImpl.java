@@ -55,14 +55,8 @@ public class FileServiceImpl implements IFileService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        updateUserProfile(fileUrl, idUser);
+        userService.updateUserProfile(fileUrl, idUser);
         return fileUrl;
-    }
-
-    private void updateUserProfile(String profilePictureUrl, Long idUser) {
-        User user = userService.findOneAndEnsureExist(idUser);
-        user.setProfilePicture(profilePictureUrl);
-        userService.save(user);
     }
 
     private File convertMultiPartToFile(MultipartFile file) throws IOException {

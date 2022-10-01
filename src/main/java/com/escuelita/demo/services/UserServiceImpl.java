@@ -61,7 +61,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public GetUserResponse update(Long id, UpdateUserRequest request) {
-        User user = repository.findById(id).orElseThrow(() -> new RuntimeException("The user does not exist"));
+        User user = findOneAndEnsureExist(id);
         user = update(user, request);
         return from(user);
     }
@@ -69,12 +69,19 @@ public class UserServiceImpl implements IUserService {
     @Override
     public User findOneAndEnsureExist(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("El usuario no se encontro"));
+                .orElseThrow(() -> new RuntimeException("The user does not exist"));
     }
 
     @Override
     public User save(User user) {
         return repository.save(user);
+    }
+
+    @Override
+    public void updateUserProfile(String profilePictureUrl, Long idUser) {
+        User user = findOneAndEnsureExist(idUser);
+        user.setProfilePicture(profilePictureUrl);
+        repository.save(user);
     }
 
     private User update(User user, UpdateUserRequest request) {
