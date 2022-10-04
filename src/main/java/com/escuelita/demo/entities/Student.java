@@ -1,5 +1,6 @@
 package com.escuelita.demo.entities;
 
+import com.escuelita.demo.entities.pivots.StudentTeacher;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,12 +18,7 @@ public class Student {
 
     private String name;
 
-    @ManyToMany
-    @JoinTable(
-            name = "students_teachers",
-            joinColumns = @JoinColumn(name = "student_id"),
-            inverseJoinColumns = @JoinColumn(name = "teacher_id")
-    )
-    private List<Teacher> teachers;
+    @OneToMany(mappedBy = "student")
+    private List<StudentTeacher> studentTeachers;
 
 }

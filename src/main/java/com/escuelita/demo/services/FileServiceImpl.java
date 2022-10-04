@@ -8,7 +8,6 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import com.escuelita.demo.entities.User;
 import com.escuelita.demo.services.interfaces.IFileService;
 import com.escuelita.demo.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
