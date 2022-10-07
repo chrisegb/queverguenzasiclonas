@@ -2,16 +2,18 @@ package com.escuelita.demo.services;
 
 import com.escuelita.demo.controllers.dtos.requests.CreateUserRequest;
 import com.escuelita.demo.controllers.dtos.requests.UpdateUserRequest;
+import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.GetUserResponse;
+import com.escuelita.demo.controllers.exceptions.UpchiapasException;
 import com.escuelita.demo.entities.User;
 import com.escuelita.demo.repositories.IUserRepository;
 import com.escuelita.demo.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -54,9 +56,13 @@ public class UserServiceImpl implements IUserService {
     }
 
     @Override
-    public GetUserResponse create(CreateUserRequest request) {
+    public BaseResponse create(CreateUserRequest request) {
         User user = from(request);
-        return from(repository.save(user));
+        return BaseResponse.builder()
+                .data(from(repository.save(user)))
+                .message("User created correctly")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.CREATED).build();
     }
 
     @Override
@@ -91,10 +97,9 @@ public class UserServiceImpl implements IUserService {
     }
 
     private User from(CreateUserRequest request) {
-        /*return User.builder()
-                .email(request.getEmail())
-                .password(request.getPassword())
-                .build();*/
+        if (request.getEmail().equals("chris@gmail.com")) {
+            throw new UpchiapasException("No quiero que sea este email: chris@gmail.com");
+        }
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());

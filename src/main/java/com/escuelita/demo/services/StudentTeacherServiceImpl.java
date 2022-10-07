@@ -1,13 +1,14 @@
 package com.escuelita.demo.services;
 
+import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.StudentResponse;
 import com.escuelita.demo.controllers.dtos.responses.TeacherResponse;
-import com.escuelita.demo.entities.Student;
 import com.escuelita.demo.entities.projections.StudentProjection;
 import com.escuelita.demo.entities.projections.TeacherProjection;
 import com.escuelita.demo.repositories.IStudentTeacherRepository;
 import com.escuelita.demo.services.interfaces.IStudentTeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,11 +22,18 @@ public class StudentTeacherServiceImpl implements IStudentTeacherService {
 
 
     @Override
-    public List<StudentResponse> listAllStudentsByTeacherId(Long teacherId) {
+    public BaseResponse listAllStudentsByTeacherId(Long teacherId) {
+
         List<StudentProjection> students = repository.listAllStudentsByTeacherId(teacherId);
-        return students.stream()
+        List<StudentResponse> response = students.stream()
                 .map(this::from)
                 .collect(Collectors.toList());
+
+        return BaseResponse.builder()
+                .data(response)
+                .message("Student list by teacher id")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.OK).build();
     }
 
     @Override
