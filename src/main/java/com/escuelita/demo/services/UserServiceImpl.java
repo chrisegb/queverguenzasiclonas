@@ -4,12 +4,14 @@ import com.escuelita.demo.controllers.dtos.requests.CreateUserRequest;
 import com.escuelita.demo.controllers.dtos.requests.UpdateUserRequest;
 import com.escuelita.demo.controllers.dtos.responses.BaseResponse;
 import com.escuelita.demo.controllers.dtos.responses.GetUserResponse;
+import com.escuelita.demo.controllers.dtos.responses.RoleResponse;
 import com.escuelita.demo.controllers.exceptions.UpchiapasException;
+import com.escuelita.demo.entities.Role;
 import com.escuelita.demo.entities.User;
 import com.escuelita.demo.repositories.IUserRepository;
+import com.escuelita.demo.services.interfaces.IRoleService;
 import com.escuelita.demo.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +24,9 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserRepository repository;
+
+    @Autowired
+    private IRoleService roleService;
 
     @Override
     public GetUserResponse get(Long id) {
@@ -103,6 +108,11 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
+
+        Role role = roleService.findRoleById(request.getRoleId());
+
+        user.setRole(role);
+
         return user;
     }
 
@@ -110,6 +120,13 @@ public class UserServiceImpl implements IUserService {
         GetUserResponse response = new GetUserResponse();
         response.setId(user.getId());
         response.setEmail(user.getEmail());
+        response.setRole(from(user.getRole()));
+        return response;
+    }
+
+    private RoleResponse from(Role role) {
+        RoleResponse response = new RoleResponse();
+        response.setName(role.getName());
         return response;
     }
 
